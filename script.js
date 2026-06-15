@@ -15,8 +15,11 @@ const factoresAsociados = [
     "9. Si mi pareja se opusiera a usar condón, me resultaría muy difícil insistir o negarme a tener la relación sexual.",
     "10. En el campus universitario o en sus alrededores, me resulta fácil y accesible conseguir preservativos (ej. dispensadores, botiquín, farmacias cercanas).",
     "11. Siento que existe un ambiente de confianza y privacidad en la universidad para acudir a los servicios de salud o bienestar estudiantil por consejería sexual.",
-    "12. Considero que el consumo de alcohol es una parte central y normalizada en los eventos sociales y fiestas de los estudiantes de mi facultad."
+    "12. Considero que el consumo de alcohol es una parte central y normalizada en los eventos sociales y fiestas de los estudiantes de mi facultad.",
+    "13. El uso frecuente de redes sociales o aplicaciones de citas (ej. Tinder, Instagram) me facilita tener encuentros sexuales casuales de forma rápida.",
+    "14. Considero que la educación sexual que recibí en mi formación académica es suficiente, por lo que no necesito buscar información sobre prevención de ITS en fuentes no confiables de internet."
 ];
+
 
 const escalaFactores = [
     { valor: 1, texto: "Totalmente en desacuerdo" },
@@ -32,8 +35,8 @@ function renderizarPreguntas(arrayPreguntas, contenedorId, prefijoName, opciones
 
     arrayPreguntas.forEach((pregunta, index) => {
         let name = `${prefijoName}${index + 1}`; 
-        // Añadimos un delay progresivo para el efecto cascada (0.1s, 0.2s, etc.)
-        let delay = index * 0.1; 
+        // Delay ligeramente mayor para que aparezcan después de la ficha sociodemográfica
+        let delay = 0.2 + (index * 0.1); 
         
         html += `
         <div class="question-block" style="animation-delay: ${delay}s">
@@ -81,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 2. Validar checkbox para desbloquear el botón
+    // 2. Validar checkbox
     consentCheckbox.addEventListener('change', function() {
         btnAcceptModal.disabled = !this.checked;
     });
@@ -97,16 +100,36 @@ document.addEventListener("DOMContentLoaded", () => {
     surveyForm.addEventListener('submit', async function(e) {
         e.preventDefault(); 
         
+        // --- VALIDACIÓN DE CRITERIOS DE INCLUSIÓN ---
+        const edad = parseInt(document.getElementById('sd-edad').value);
+        const ciclo = document.querySelector('input[name="sd-ciclo"]:checked').value;
+
+        if (edad < 18 || ciclo === "IX - X Ciclo") {
+            alert("Muchas gracias por su interés. Lamentablemente, no cumple con los criterios de inclusión requeridos para esta fase de la investigación (ser mayor de 18 años y cursar entre el I y VIII ciclo).");
+            // Limpiar formulario y volver al inicio
+            surveyForm.reset();
+            window.scrollTo(0, 0);
+            return; // Detiene el envío de datos
+        }
+        
         btnSubmit.disabled = true;
         loadingMsg.style.display = 'block';
 
         let respuestasExtraidas = [];
         
+        // Recolectar datos sociodemográficos (Se insertan primero, columnas C a G)
+        respuestasExtraidas.push(edad);
+        respuestasExtraidas.push(document.querySelector('input[name="sd-sexo"]:checked').value);
+        respuestasExtraidas.push(ciclo);
+        respuestasExtraidas.push(document.querySelector('input[name="sd-situacion"]:checked').value);
+        respuestasExtraidas.push(document.querySelector('input[name="sd-residencia"]:checked').value);
+
         // Relleno de las 23 variables del SRS para mantener la matriz intacta
         for(let i = 0; i < 23; i++) {
             respuestasExtraidas.push(""); 
         }
         
+        // Recolectar respuestas de Factores Asociados
         for(let i = 1; i <= factoresAsociados.length; i++) {
             let seleccion = document.querySelector(`input[name="fa${i}"]:checked`);
             respuestasExtraidas.push(seleccion ? seleccion.value : "");

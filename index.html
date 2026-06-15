@@ -21,7 +21,6 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        /* FONDO ANIMADO Y SUAVE PARA REDUCIR FATIGA VISUAL */
         body {
             background: linear-gradient(-45deg, #e2e8f0, #c7d2fe, #e0e7ff, #f1f5f9);
             background-size: 400% 400%;
@@ -43,7 +42,6 @@
             margin: 0 auto;
         }
 
-        /* EFECTO GLASSMORPHISM PARA LAS TARJETAS */
         .glass-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -75,7 +73,7 @@
             padding-bottom: 10px;
         }
 
-        /* --- MODAL (GLOBO EMERGENTE) --- */
+        /* MODAL GLOBO EMERGENTE */
         #modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -115,8 +113,6 @@
             color: #334155;
             text-align: justify;
             margin-bottom: 15px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary-light) #f1f5f9;
         }
 
         .scroll-notice {
@@ -128,7 +124,6 @@
             transition: opacity 0.3s;
         }
 
-        /* Checkbox Moderno */
         .checkbox-container {
             display: flex;
             align-items: flex-start;
@@ -141,7 +136,7 @@
             cursor: pointer;
             transition: opacity 0.3s;
             opacity: 0.5;
-            pointer-events: none; /* Desactivado inicialmente */
+            pointer-events: none;
         }
 
         .checkbox-container.unlocked {
@@ -154,14 +149,78 @@
             width: 20px;
             height: 20px;
             accent-color: var(--primary-color);
-            cursor: pointer;
         }
 
-        /* --- ENCUESTA Y PREGUNTAS --- */
         #main-survey-content {
             display: none;
         }
 
+        /* ESTILOS FICHA SOCIODEMOGRÁFICA */
+        .socio-block {
+            margin-bottom: 25px;
+        }
+
+        .socio-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #0f172a;
+            font-size: 15px;
+        }
+
+        .socio-input {
+            width: 100%;
+            max-width: 200px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .socio-input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .socio-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .socio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .socio-option:hover {
+            background: #e0e7ff;
+            border-color: var(--primary-light);
+        }
+
+        .socio-option:has(input:checked) {
+            background: #eef2ff;
+            border-color: var(--primary-color);
+            box-shadow: inset 0 0 0 1px var(--primary-color);
+        }
+
+        .socio-option input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        /* ESTILOS PREGUNTAS LIKERT */
         .question-block {
             margin-bottom: 35px;
             background: rgba(255, 255, 255, 0.6);
@@ -169,7 +228,6 @@
             border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.8);
             transition: transform 0.3s, box-shadow 0.3s;
-            /* Preparación para la animación en cascada desde JS */
             opacity: 0;
             transform: translateY(20px);
             animation: slideUpFade 0.6s forwards ease-out;
@@ -215,7 +273,7 @@
             padding: 12px 15px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s;
         }
 
         @media (min-width: 600px) {
@@ -244,12 +302,9 @@
         .likert-option input {
             width: 18px;
             height: 18px;
-            cursor: pointer;
             accent-color: #fff;
-            flex-shrink: 0;
         }
 
-        /* --- BOTONES --- */
         button {
             width: 100%;
             background-color: var(--primary-color);
@@ -267,14 +322,12 @@
         button:hover:not(:disabled) {
             background-color: var(--primary-light);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
         }
 
         button:disabled {
             background-color: #94a3b8;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
         }
 
         .loading {
@@ -304,6 +357,7 @@
 </head>
 <body>
 
+<!-- MODAL DE CONSENTIMIENTO -->
 <div id="modal-overlay">
     <div class="modal-box">
         <h2 style="text-align: center; border:none;">Consentimiento Informado</h2>
@@ -336,8 +390,59 @@
     </header>
 
     <form id="survey-form">
+        
+        <!-- PARTE 1: FICHA SOCIODEMOGRÁFICA -->
+        <div class="glass-card" id="sociodemografico-container">
+            <h2>I. Ficha de Datos Sociodemográficos</h2>
+            <p style="font-size: 14px; color: #475569; margin-bottom: 25px;">Por favor, complete la opción que corresponda a su situación actual. Toda la información es estrictamente anónima.</p>
+            
+            <div class="socio-block">
+                <label class="socio-label" for="sd-edad">1. Edad (años):</label>
+                <input type="number" id="sd-edad" name="sd-edad" class="socio-input" required placeholder="Ej: 20">
+            </div>
+
+            <div class="socio-block">
+                <label class="socio-label">2. Sexo biológico:</label>
+                <div class="socio-options">
+                    <label class="socio-option"><input type="radio" name="sd-sexo" value="Femenino" required> Femenino</label>
+                    <label class="socio-option"><input type="radio" name="sd-sexo" value="Masculino" required> Masculino</label>
+                </div>
+            </div>
+
+            <div class="socio-block">
+                <label class="socio-label">3. Ciclo académico en el que se encuentra matriculado:</label>
+                <p style="font-size: 12px; color: #64748b; margin-bottom: 8px;">*Si cursa asignaturas de distintos ciclos, marque el ciclo donde tiene mayor carga académica.</p>
+                <div class="socio-options">
+                    <label class="socio-option"><input type="radio" name="sd-ciclo" value="I - II Ciclo" required> I - II Ciclo (Primer año)</label>
+                    <label class="socio-option"><input type="radio" name="sd-ciclo" value="III - IV Ciclo" required> III - IV Ciclo (Segundo año)</label>
+                    <label class="socio-option"><input type="radio" name="sd-ciclo" value="V - VI Ciclo" required> V - VI Ciclo (Tercer año)</label>
+                    <label class="socio-option"><input type="radio" name="sd-ciclo" value="VII - VIII Ciclo" required> VII - VIII Ciclo (Cuarto año)</label>
+                    <label class="socio-option"><input type="radio" name="sd-ciclo" value="IX - X Ciclo" required> IX - X Ciclo (Quinto año)</label>
+                </div>
+            </div>
+
+            <div class="socio-block">
+                <label class="socio-label">4. Situación sentimental actual:</label>
+                <div class="socio-options">
+                    <label class="socio-option"><input type="radio" name="sd-situacion" value="Soltero/a" required> Soltero/a (Sin pareja estable)</label>
+                    <label class="socio-option"><input type="radio" name="sd-situacion" value="Con pareja estable" required> Con pareja estable (Enamorado/a, noviazgo)</label>
+                    <label class="socio-option"><input type="radio" name="sd-situacion" value="Conviviente / Casado/a" required> Conviviente / Casado/a</label>
+                </div>
+            </div>
+
+            <div class="socio-block">
+                <label class="socio-label">5. ¿Con quién reside actualmente durante el periodo de clases?</label>
+                <div class="socio-options">
+                    <label class="socio-option"><input type="radio" name="sd-residencia" value="Solo/a" required> Solo/a (Independiente)</label>
+                    <label class="socio-option"><input type="radio" name="sd-residencia" value="Con padres/familiares" required> Con mis padres o familiares directos</label>
+                    <label class="socio-option"><input type="radio" name="sd-residencia" value="Con compañeros/amigos" required> Con compañeros de cuarto / amigos / otros</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- PARTE 2: FACTORES ASOCIADOS (PILOTO) -->
         <div class="glass-card" id="factores-container">
-            <h2>Factores Asociados</h2>
+            <h2>II. Factores Asociados</h2>
             <p style="font-size: 14px; color: #475569; margin-bottom: 25px; padding: 15px; background: rgba(224, 231, 255, 0.5); border-left: 4px solid var(--primary-light); border-radius: 0 8px 8px 0;">
                 <strong>Instrucciones:</strong> Seleccione su nivel de acuerdo o desacuerdo respecto a las siguientes afirmaciones basándose en sus percepciones personales.
             </p>
@@ -353,7 +458,7 @@
     <div class="glass-card">
         <h2 style="border:none; color: #10b981; font-size: 28px;">¡Registro Completado!</h2>
         <p style="font-size: 18px; margin-top: 15px;">Sus respuestas han sido almacenadas exitosamente.</p>
-        <p style="margin-top: 20px; color: #64748b;">Muchas gracias por su valioso tiempo y contribución a la investigación académica.</p>
+        <p style="margin-top: 20px; color: #64748b;">Muchas gracias por su valioso tiempo y contribución a la investigación académica de la UNSM.</p>
     </div>
 </div>
 
