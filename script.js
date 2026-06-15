@@ -104,6 +104,15 @@ function renderizarPreguntas(arrayPreguntas, contenedorId, prefijoName, opciones
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // --- SISTEMA DE SEGURIDAD ANTIDUPLICADOS ---
+    if (localStorage.getItem("encuesta_tesis_completada") === "true") {
+        // Si ya participó, ocultamos el modal y la encuesta, y mostramos el bloqueo
+        document.getElementById('modal-overlay').style.display = 'none';
+        document.getElementById('main-survey-content').style.display = 'none';
+        document.getElementById('already-done-screen').style.display = 'block';
+        return; // Esto "apaga" el resto del código para este usuario
+    }
+
     // APLICAR APAGADORES A LA INTERFAZ VISUAL
         const divSociodemografico = document.getElementById('sociodemografico-container');
         const divConductas = document.getElementById('conductas-container');
@@ -232,6 +241,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const resultado = await response.json();
 
             if (resultado.status === "success") {
+                // GUARDAR EN MEMORIA QUE YA PARTICIPÓ
+                localStorage.setItem("encuesta_tesis_completada", "true");
+                
                 mainSurveyContent.style.display = 'none';
                 successScreen.style.display = 'block';
                 window.scrollTo(0, 0);
