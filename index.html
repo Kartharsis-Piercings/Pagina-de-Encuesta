@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Investigación - Tesis Enfermería UNSM</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .consent-text {
+            font-size: 14px;
+            text-align: justify;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 10px;
+            background: #eef2ff;
+            border-radius: 6px;
+            border: 1px solid #c7d2fe;
+        }
+
+        .checkbox-container input {
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+        }
+
+        #survey-section {
+            display: none;
+        }
+
+        .question-block {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .question-block:last-child {
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: #111827;
+        }
+
+        .likert-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .likert-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            padding: 5px;
+            transition: background 0.2s;
+            border-radius: 4px;
+        }
+
+        .likert-option:hover {
+            background: #e5e7eb;
+        }
+
+        .likert-option input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .likert-label {
+            line-height: 1.2;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 15px;
+            padding: 10px;
+            background: #eef2ff;
+            border-radius: 6px;
+        }
+
+        #success-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        #success-screen h2 {
+            border: none;
+            color: #10b981;
+            font-size: 28px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Plataforma de Recolección de Datos</h1>
+        <p>Proyecto de Tesis - Universidad Nacional de San Martín (UNSM)</p>
+    </header>
+
+    <div id="consent-card" class="card">
+        <h2>Consentimiento Informado</h2>
+        <div class="consent-text">
+            <p><strong>Estimado(a) participante:</strong></p><br>
+            <p>Se le invita a participar en la investigación para el desarrollo de la tesis de enfermería. Su participación es completamente voluntaria y las respuestas brindadas serán tratadas con estricta confidencialidad y anonimato, utilizándose exclusivamente para fines estadísticos y académicos del proyecto.</p><br>
+            <p>Al marcar la casilla inferior, usted declara ser mayor de edad, haber leído esta información y manifestar su conformidad libre y voluntaria para participar en el llenado de este instrumento.</p>
+        </div>
+        <label class="checkbox-container">
+            <input type="checkbox" id="consent-checkbox">
+            <span>He leído el consentimiento informado y acepto participar voluntariamente en esta encuesta.</span>
+        </label>
+        <button id="btn-start" disabled style="margin-top: 20px;">Comenzar Encuesta</button>
+    </div>
+
+    <form id="survey-form">
+        <div id="survey-section">
+            
+            <div class="card" id="conductas-container">
+                <h2>Parte 1: Conductas Sexuales en los últimos seis meses</h2>
+                <p style="font-size: 13px; color: #6b7280; margin-bottom: 20px; padding: 10px; background: #fffbeb; border-left: 4px solid #f59e0b;">
+                    <strong>Instrucciones:</strong> Seleccione la opción que mejor represente la cantidad de veces que ha realizado cada conducta. <br><br>
+                    <em>Nota: A partir de la pregunta 8 (Conductas sexuales), si nunca ha tenido relaciones sexuales, por favor seleccione "Nunca (0)" en todas las opciones restantes de esta parte.</em>
+                </p>
+                <div id="preguntas-cs"></div>
+            </div>
+
+            <div class="card" id="factores-container">
+                <h2>Parte 2: Factores Asociados</h2>
+                <p style="font-size: 13px; color: #6b7280; margin-bottom: 20px; padding: 10px; background: #eff6ff; border-left: 4px solid #3b82f6;">
+                    <strong>Instrucciones:</strong> Seleccione su nivel de acuerdo o desacuerdo respecto a las siguientes afirmaciones.
+                </p>
+                <div id="preguntas-fa"></div>
+            </div>
+
+            <button type="submit" id="btn-submit">Enviar Respuestas a la Base de Datos</button>
+            <div id="loading-msg" class="loading">Procesando y transmitiendo sus respuestas de manera segura...</div>
+        </div>
+    </form>
+
+    <div id="success-screen" class="card">
+        <h2>¡Registro Completado!</h2>
+        <p style="font-size: 18px; margin-top: 15px;">Sus respuestas han sido almacenadas exitosamente.</p>
+        <p style="margin-top: 20px; color: #4b5563;">Muchas gracias por su valioso tiempo y contribución a la investigación académica de nuestra universidad.</p>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
