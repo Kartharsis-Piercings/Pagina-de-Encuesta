@@ -7,8 +7,8 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzE9rlfDeM0YQxz
 // CONFIGURACIÓN 2: PANEL DE CONTROL DE MÓDULOS (APAGADOR)
 // =========================================================================
 const MODULOS = {
-    sociodemografico: true, // Cambia a true para mostrar la ficha sociodemográfica
-    srs: true,              // Cambia a true cuando agreguemos el bloque de Conductas Sexuales
+    sociodemografico: false, // Cambia a true para mostrar la ficha sociodemográfica
+    srs: false,              // Cambia a true cuando agreguemos el bloque de Conductas Sexuales
     fa: true                 // Mantenlo en true para tu piloto de Factores Asociados
 };
 
